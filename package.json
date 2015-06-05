@@ -1,0 +1,31 @@
+{
+  "name": "atom-tsd",
+  "main": "./lib/atom-tsd",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "activationCommands": {
+    "atom-workspace": "atom-tsd:toggle"
+  },
+  "repository": "https://github.com/atom/atom-tsd",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+    "atom-space-pen-views": "^2.0.5",
+    "lodash": "^3.9.3",
+    "tsd": "^0.6.1",
+    "typescript": "^1.5.0-beta"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-ts": "*",
+    "grunt-tslint": "~0.4.1",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-copy": "*",
+    "time-grunt": "*",
+    "grunt-jasmine-node": "*",
+    "load-grunt-tasks": "*"
+  },
+  "peerDependencies": {}
+}

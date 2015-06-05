@@ -1,0 +1,22 @@
+# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Install with tsd'
+      'command': 'atom-tsd:install'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'tsd'
+      'submenu': [
+        {
+          'label': 'Install'
+          'command': 'atom-tsd:install'
+        }
+      ]
+    ]
+  }
+]
