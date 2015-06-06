@@ -1,10 +1,6 @@
 .idea/
 node_modules/
 *.map
-lib/*.js
-lib/*/*.js
-lib/*/*/*.js
-lib/*/*/*/*.js
 spec/*.js
 spec/*/*.js
 spec/*/*/*.js
