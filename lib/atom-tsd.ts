@@ -16,7 +16,7 @@ class Tsd {
         var cmd = child_process.spawn('tsd', ['query', query, '--action', 'install', '--save', '--resolve'], {cwd: path});
 
         cmd.stdout.on('data', (data: string) => {
-            // console.log('stdout: ' + data);
+            console.log('stdout: ' + data);
             if (data.match(/\- [^\n]+\/[^\n]+\.d\.ts/ig)) {
                 console.log(data);
             }
