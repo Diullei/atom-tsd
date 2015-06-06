@@ -15,10 +15,11 @@ class Tsd {
         cmd.stdout.on('data', (data) => {
             console.log('tsd stdout: ' + data);
             if (data.toString().match(/\- [^\n]+\/[^\n]+\.d\.ts/ig)) {
-                var match = /\- ([^\n]+\/[^\n]+\.d\.ts)/ig.exec(data);
+                var regex = /\- ([^\n]+\/[^\n]+\.d\.ts)/igm;
+                var match = regex.exec(data);
                 while(match != null) {
                     out(match[1]);
-                    match = /\- ([^\n]+\/[^\n]+\.d\.ts)/ig.exec(data);
+                    match = regex.exec(data);
                 }
             }
         });
