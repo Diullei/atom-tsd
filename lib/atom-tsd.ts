@@ -120,7 +120,7 @@ class AtomTsd {
                         cycleIndex = 0;
                     }
 
-                    this.outView.setStatus(cycle[cycleIndex]);
+                    this.outView.setStatus(cycle[cycleIndex++]);
                 };
 
                 var id = window.setInterval(fnWaiting, 500);
