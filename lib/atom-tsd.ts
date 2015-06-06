@@ -128,11 +128,11 @@ class AtomTsd {
             this.outView.show();
 
             var cycle = [
-                'install.',
-                'install..',
-                'install...',
-                'install....',
-                'install.....'
+                'reinstalling.',
+                'reinstalling..',
+                'reinstalling...',
+                'reinstalling....',
+                'reinstalling.....'
             ];
 
             var cycleIndex = 0;
@@ -180,11 +180,11 @@ class AtomTsd {
             this.outView.show();
 
             var cycle = [
-                'install.',
-                'install..',
-                'install...',
-                'install....',
-                'install.....'
+                'updating.',
+                'updating..',
+                'updating...',
+                'updating....',
+                'updating.....'
             ];
 
             var cycleIndex = 0;
@@ -238,11 +238,11 @@ class AtomTsd {
                 this.outView.show();
 
                 var cycle = [
-                    'install.',
-                    'install..',
-                    'install...',
-                    'install....',
-                    'install.....'
+                    'installing.',
+                    'installing..',
+                    'installing...',
+                    'installing....',
+                    'installing.....'
                 ];
 
                 var cycleIndex = 0;
