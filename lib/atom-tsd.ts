@@ -28,7 +28,7 @@ class Tsd {
         var cmd = child_process.spawn((isWin ? 'tsd.cmd' : 'tsd'), args, {cwd: path});
 
         cmd.on('error', function(err) {
-            if (err.code === 'ENOENT' && err.syscall === 'spawn tsdx' && err.path === 'tsd') {
+            if (err.code === 'ENOENT' && err.syscall === 'spawn tsd' && err.path === 'tsd') {
                 tsdMissing = true;
                 out('--missing-tsd--');
             } else {
