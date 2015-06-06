@@ -80,7 +80,7 @@ class CommandOutputView extends spacePen.View {
         var line = <string>data;
 
         if(line.trim().indexOf('<') != 0) {
-            line = '<span><image src="atom:atom-tsd/styles/min-dt-logo.jpg"/>' + line + '</span>';
+            line = '<span><image style="width:20px; padding-bottom: 3px;" src="atom://atom-tsd/styles/min-dt-logo.jpg"/>&nbsp;' + line + '</span>';
         }
 
         span.innerHTML = line;
