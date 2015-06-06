@@ -1,5 +1,6 @@
 /// <reference path="../typings/tsd.d.ts"/>
 
+import util = require('util');
 import fs = require('fs');
 import path = require('path');
 import AtomTsdView = require('./atom-tsd-view');
@@ -7,7 +8,25 @@ import {CompositeDisposable} from 'atom';
 
 import EventKit = require('event-kit');
 
-var tsd = require('tsd');
+import child_process = require('child_process');
+
+class Tsd {
+    public static install(path: string, query: string) {
+        var cmd = child_process.spawn('tsd', ['query', query, '--action', 'install', '--save', '--resolve'], {cwd: path});
+
+        cmd.stdout.on('data', (data) => {
+            console.log('stdout: ' + data);
+        });
+
+        cmd.stderr.on('data', function (data) {
+            console.log('stderr: ' + data);
+        });
+
+        cmd.on('close', function (code) {
+            console.log('child process exited with code ' + code);
+        });
+    }
+}
 
 class AtomTsd {
     atomTsdView: any;
@@ -58,6 +77,7 @@ class AtomTsd {
     public install() {
         console.log('AtomTSD was toggled!');
 
+
         var list = [];
 
         var defs = require('./repository.json');
@@ -79,6 +99,8 @@ class AtomTsd {
 
             console.log(answer);
             console.log(this.workingDirectory());
+
+            Tsd.install(this.workingDirectory(), def);
         });
 
         if (list.length > 0) {
