@@ -81,9 +81,9 @@ class AtomTsd {
 
     public activate(state: any) {
         this.subscriptions = new CompositeDisposable();
-        return this.subscriptions.add(atom.commands.add('atom-workspace', 'tsd:install', () => this.install()));
-        return this.subscriptions.add(atom.commands.add('atom-workspace', 'tsd:reinstall', () => this.reinstall()));
-        return this.subscriptions.add(atom.commands.add('atom-workspace', 'tsd:update', () => this.update()));
+        this.subscriptions.add(atom.commands.add('atom-workspace', 'tsd:install', () => this.install()));
+        this.subscriptions.add(atom.commands.add('atom-workspace', 'tsd:reinstall', () => this.reinstall()));
+        this.subscriptions.add(atom.commands.add('atom-workspace', 'tsd:update', () => this.update()));
     }
 
     public deactivate() {
