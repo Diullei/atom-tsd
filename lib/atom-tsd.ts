@@ -15,7 +15,8 @@ class Tsd {
         cmd.stdout.on('data', (data) => {
             console.log('tsd stdout: ' + data);
             if (data.toString().match(/\- [^\n]+\/[^\n]+\.d\.ts/ig)) {
-                out(data.toString());
+                var match = /\- ([^\n]+\/[^\n]+\.d\.ts)/ig.exec(data);
+                out(match[1]);
             }
         });
 
