@@ -3,37 +3,35 @@
 import fs = require('fs');
 import path = require('path');
 import AtomTsdView = require('./atom-tsd-view');
-import {CompositeDisposable} from 'atom';
-
+import CommandOutputView = require('./out-view');
 import child_process = require('child_process');
 
-interface IOut {
-
-}
+import {CompositeDisposable} from 'atom';
 
 class Tsd {
-    public static install(out: IOut, path: string, query: string) {
+    public static install(out: (line: string) => void, path: string, query: string) {
         var cmd = child_process.spawn('tsd', ['query', query, '--action', 'install', '--save', '--resolve'], {cwd: path});
 
         cmd.stdout.on('data', (data) => {
-            // console.log('stdout: ' + data);
+            console.log('tsd stdout: ' + data);
             if (data.toString().match(/\- [^\n]+\/[^\n]+\.d\.ts/ig)) {
-                console.log(data.toString());
+                out(data.toString());
             }
         });
 
-        cmd.stderr.on('data', function (data) {
-            console.log('stderr: ' + data);
+        cmd.stderr.on('data ', function (data) {
+            console.log('tsd stderr: ' + data);
         });
 
         cmd.on('close', function (code) {
-            console.log('child process exited with code ' + code);
+            console.log('tsd child process exited with code ' + code);
         });
     }
 }
 
-class AtomTsd implements IOut {
+class AtomTsd {
     atomTsdView: any;
+    outView: any;
     modalPanel: any;
     subscriptions: EventKit.CompositeDisposable;
     private _items: { displayName: string; name: string; }[] = [];
@@ -94,7 +92,16 @@ class AtomTsd implements IOut {
             });
 
             if (answer === 0) {
-                Tsd.install(this, this.workingDirectory(), def);
+                if (this.outView) {
+                    this.outView.detach();
+                    this.outView.destroy();
+                }
+
+                this.outView = new CommandOutputView();
+                this.outView.clean();
+                this.outView.show();
+
+                Tsd.install((line) => { this.outView.addOutput(line); }, this.workingDirectory(), def);
             }
         });
 
