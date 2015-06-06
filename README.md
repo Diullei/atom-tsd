@@ -1,10 +1,10 @@
-# atom tsd package
+# Atom TSD
 
 > Working in process...
 
 Install and update DefinitelyTyped typescript typings using [TSD](https://github.com/DefinitelyTyped/tsd) with [Atom](https://atom.io).
 
-![A screenshot of your package](https://github.com/Diullei/atom-tsd/raw/master/optimised.gif)
+![Atom TSD](https://github.com/Diullei/atom-tsd/raw/master/optimised.gif)
 
 ## Available commands
 
