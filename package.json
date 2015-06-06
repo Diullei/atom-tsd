@@ -1,7 +1,7 @@
 {
   "name": "atom-tsd",
   "main": "./lib/atom-tsd",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Install and update DefinitelyTyped typescript typings using TSD with Atom",
   "repository": "https://github.com/Diullei/atom-tsd",
   "license": "MIT",
