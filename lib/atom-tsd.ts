@@ -153,7 +153,7 @@ class AtomTsd {
 
                 var id = window.setInterval(fnWaiting, 500);
 
-                Tsd['command']((line) => {
+                Tsd[command]((line) => {
                     if (line != '--finish--') {
                         if (line === '--missing-tsd--') {
                             window.clearInterval(id);
