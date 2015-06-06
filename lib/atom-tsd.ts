@@ -1,21 +1,25 @@
 /// <reference path="../typings/tsd.d.ts"/>
 
-import util = require('util');
 import fs = require('fs');
 import path = require('path');
 import AtomTsdView = require('./atom-tsd-view');
 import {CompositeDisposable} from 'atom';
 
-import EventKit = require('event-kit');
-
 import child_process = require('child_process');
 
+interface IOut {
+
+}
+
 class Tsd {
-    public static install(path: string, query: string) {
+    public static install(out: IOut, path: string, query: string) {
         var cmd = child_process.spawn('tsd', ['query', query, '--action', 'install', '--save', '--resolve'], {cwd: path});
 
-        cmd.stdout.on('data', (data) => {
-            console.log('stdout: ' + data);
+        cmd.stdout.on('data', (data: string) => {
+            // console.log('stdout: ' + data);
+            if (data.match(/\- [^\n]+\/[^\n]+\.d\.ts/ig)) {
+                console.log(data);
+            }
         });
 
         cmd.stderr.on('data', function (data) {
@@ -28,19 +32,26 @@ class Tsd {
     }
 }
 
-class AtomTsd {
+class AtomTsd implements IOut {
     atomTsdView: any;
     modalPanel: any;
     subscriptions: EventKit.CompositeDisposable;
+    private _items: { displayName: string; name: string; }[] = [];
+
+    constructor() {
+        var defs = require('./repository.json');
+
+        defs.content.forEach((def) => {
+            if(def.project == def.name) {
+                this._items.push({displayName: def.project + ' - ' + def.info.projectUrl, name: def.name});
+            } else {
+                this._items.push({displayName: def.name + ' (' + def.project + ') - ' + def.info.projectUrl, name: def.name});
+            }
+        });
+    }
 
     public activate(state: any) {
-        // this.atomTsdView = new AtomTsdView(state.atomTsdState);
-        // this.modalPanel = (<any>atom.workspace).addModalPanel({item: this.atomTsdView.getElement(), visible: false});
-
-        // Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
         this.subscriptions = new CompositeDisposable();
-
-        // Register command that toggles this view
         return this.subscriptions.add(atom.commands.add('atom-workspace', 'tsd:install', () => this.install()));
     }
 
@@ -75,35 +86,19 @@ class AtomTsd {
     }
 
     public install() {
-        console.log('AtomTSD was toggled!');
-
-
-        var list = [];
-
-        var defs = require('./repository.json');
-
-        defs.content.forEach((def) => {
-            if(def.project == def.name) {
-                list.push({displayName: def.project + ' - ' + def.info.projectUrl, name: def.name});
-            } else {
-                list.push({displayName: def.name + ' (' + def.project + ') - ' + def.info.projectUrl, name: def.name});
-            }
-        });
-
-        this.atomTsdView = new AtomTsdView(list, (def: any) => {
+        this.atomTsdView = new AtomTsdView(this._items, (def: any) => {
             console.log(def);
             var answer = atom.confirm({
                 message: 'You really want to install the "' + def + '" file with all of its dependencies?',
                 buttons: ["Yes", "Cancel"]
             });
 
-            console.log(answer);
-            console.log(this.workingDirectory());
-
-            Tsd.install(this.workingDirectory(), def);
+            if (answer === 1) {
+                Tsd.install(this, this.workingDirectory(), def);
+            }
         });
 
-        if (list.length > 0) {
+        if (this._items.length > 0) {
             this.atomTsdView.toggle();
         }
     }

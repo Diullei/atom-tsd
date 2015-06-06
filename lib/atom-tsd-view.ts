@@ -1,3 +1,5 @@
+// ref: https://github.com/david-driscoll/atom-yeoman/
+
 /// <reference path="../typings/tsd.d.ts"/>
 
 import spacePen = require("atom-space-pen-views");

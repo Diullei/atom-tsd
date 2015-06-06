@@ -1,3 +1,5 @@
+// a lot of typings from https://github.com/david-driscoll/atom-yeoman/
+
 /// <reference path="atom/atom.d.ts" />
 /// <reference path="atom-keymap/atom-keymap.d.ts" />
 /// <reference path="atom-space-pen-views/atom-space-pen-views.d.ts" />
