@@ -7,6 +7,8 @@ import {CompositeDisposable} from 'atom';
 
 import EventKit = require('event-kit');
 
+var tsd = require('tsd');
+
 class AtomTsd {
     atomTsdView: any;
     modalPanel: any;
