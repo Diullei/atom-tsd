@@ -23,8 +23,9 @@ class Tsd {
 
     public static execTsdCommand(out: (line: string) => void, path: string, args: string[]) {
         var tsdMissing = false;
+        var isWin = /^win/.test(process.platform);
 
-        var cmd = child_process.spawn('tsd', args, {cwd: path});
+        var cmd = child_process.spawn((isWin ? 'tsd.cmd' : 'tsd'), args, {cwd: path});
 
         cmd.on('error', function(err) {
             if (err.code === 'ENOENT' && err.syscall === 'spawn tsdx' && err.path === 'tsd') {
