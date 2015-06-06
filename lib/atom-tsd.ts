@@ -231,7 +231,7 @@ class AtomTsd {
             if (answer === 0) {
                 if (this.outView) {
                     this.outView.detach();
-                    this.outView.destroy();
+                    // this.outView.destroy();
                 }
 
                 this.outView = new CommandOutputView();
