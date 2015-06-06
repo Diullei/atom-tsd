@@ -14,7 +14,7 @@ class CommandOutputView extends spacePen.View {
                     _this.header({
                         "class": 'panel-heading'
                     }, function() {
-                        _this.span('Status: ');
+                        _this.span('TSD: ');
                         _this.span({
                             "class": 'status-name',
                             outlet: 'header'
@@ -26,7 +26,7 @@ class CommandOutputView extends spacePen.View {
                         }, function() {
                             _this.span({
                                 "class": 'heading-fold icon-remove-close',
-                                'style': "cursor: pointer",
+                                'style': "cursor: pointer, display: none",
                                 'click': "close",
                                 outlet: 'div'
                             });
@@ -72,6 +72,11 @@ class CommandOutputView extends spacePen.View {
     public setStatus(status: string) {
         var el = <HTMLElement>this.element.querySelector('.status-name');
         el.textContent = status;
+    }
+
+    public showCloseButton() {
+        var el = <HTMLElement>this.element.querySelector('.icon-remove-close');
+        el.style.display = 'block';
     }
 
     addOutput(data) {

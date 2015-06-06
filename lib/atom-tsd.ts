@@ -108,15 +108,17 @@ class AtomTsd {
                 this.outView.show();
 
                 var cycle = [
-                    'tsd:install.',
-                    'tsd:install..',
-                    'tsd:install...'
+                    'install.',
+                    'install..',
+                    'install...',
+                    'install....',
+                    'install.....'
                 ];
 
                 var cycleIndex = 0;
 
                 var fnWaiting = () => {
-                    if (cycleIndex > 3) {
+                    if (cycleIndex > 4) {
                         cycleIndex = 0;
                     }
 
@@ -130,7 +132,8 @@ class AtomTsd {
                         this.outView.addOutput(line);
                     } else {
                         window.clearInterval(id);
-                        this.outView.setStatus('tsd:finish');
+                        this.outView.setStatus('All types have been installed!');
+                        this.outView.showCloseButton();
                     }
                 }, this.workingDirectory(), def);
             }
