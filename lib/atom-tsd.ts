@@ -8,6 +8,33 @@ import child_process = require('child_process');
 
 import {CompositeDisposable} from 'atom';
 
+function cycleMessage(msg: string, fnPublish: (msg: string) => void) {
+    var cycle = [
+        `${msg}.`,
+        `${msg}..`,
+        `${msg}...`,
+        `${msg}....`,
+        `${msg}.....`
+    ];
+
+    var cycleIndex = 0;
+
+    var fnWaiting = () => {
+        if (cycleIndex > 4) {
+            cycleIndex = 0;
+        }
+        fnPublish(cycle[cycleIndex++]);
+    };
+
+    var id = window.setInterval(fnWaiting, 500);
+
+    return {
+        cancel: () => {
+            window.clearInterval(id);
+        }
+    };
+}
+
 class Tsd {
     public static install(out: (line: string) => void, path: string, query: string) {
         this.execTsdCommand(out, path, ['query', query, '--action', 'install', '--save', '--resolve']);
@@ -139,37 +166,22 @@ class AtomTsd {
             this.outView.clean();
             this.outView.show();
 
-            var cycle = [
-                'reinstalling.',
-                'reinstalling..',
-                'reinstalling...',
-                'reinstalling....',
-                'reinstalling.....'
-            ];
-
-            var cycleIndex = 0;
-
-            var fnWaiting = () => {
-                if (cycleIndex > 4) {
-                    cycleIndex = 0;
-                }
-
-                this.outView.setStatus(cycle[cycleIndex++]);
-            };
-
-            var id = window.setInterval(fnWaiting, 500);
+            var waitMessage = cycleMessage('reinstalling', (msg: string) => {
+                this.outView.setStatus(msg);
+            });
 
             Tsd.update((line) => {
                 if (line != '--finish--') {
+
                     if (line === '--missing-tsd--') {
-                        window.clearInterval(id);
+                        waitMessage.cancel();
                         this.outView.close();
                         this.tsdIdMissing();
                     } else {
                         this.outView.addOutput(line);
                     }
                 } else {
-                    window.clearInterval(id);
+                    waitMessage.cancel();
                     this.outView.setStatus('All types have been reinstalled!');
                     this.outView.showCloseButton();
                 }
@@ -192,37 +204,21 @@ class AtomTsd {
             this.outView.clean();
             this.outView.show();
 
-            var cycle = [
-                'updating.',
-                'updating..',
-                'updating...',
-                'updating....',
-                'updating.....'
-            ];
-
-            var cycleIndex = 0;
-
-            var fnWaiting = () => {
-                if (cycleIndex > 4) {
-                    cycleIndex = 0;
-                }
-
-                this.outView.setStatus(cycle[cycleIndex++]);
-            };
-
-            var id = window.setInterval(fnWaiting, 500);
+            var waitMessage = cycleMessage('updating', (msg: string) => {
+                this.outView.setStatus(msg);
+            });
 
             Tsd.update((line) => {
                 if (line != '--finish--') {
                     if (line === '--missing-tsd--') {
-                        window.clearInterval(id);
+                        waitMessage.cancel();
                         this.outView.close();
                         this.tsdIdMissing();
                     } else {
                         this.outView.addOutput(line);
                     }
                 } else {
-                    window.clearInterval(id);
+                    waitMessage.cancel();
                     this.outView.setStatus('All types have been updated!');
                     this.outView.showCloseButton();
                 }
@@ -246,37 +242,21 @@ class AtomTsd {
                 this.outView.clean();
                 this.outView.show();
 
-                var cycle = [
-                    'installing.',
-                    'installing..',
-                    'installing...',
-                    'installing....',
-                    'installing.....'
-                ];
-
-                var cycleIndex = 0;
-
-                var fnWaiting = () => {
-                    if (cycleIndex > 4) {
-                        cycleIndex = 0;
-                    }
-
-                    this.outView.setStatus(cycle[cycleIndex++]);
-                };
-
-                var id = window.setInterval(fnWaiting, 500);
+                var waitMessage = cycleMessage('installing', (msg: string) => {
+                    this.outView.setStatus(msg);
+                });
 
                 Tsd.install((line) => {
                     if (line != '--finish--') {
                         if (line === '--missing-tsd--') {
-                            window.clearInterval(id);
+                            waitMessage.cancel();
                             this.outView.close();
                             this.tsdIdMissing();
                         } else {
                             this.outView.addOutput(line);
                         }
                     } else {
-                        window.clearInterval(id);
+                        waitMessage.cancel();
                         this.outView.setStatus('All types have been installed!');
                         this.outView.showCloseButton();
                     }
