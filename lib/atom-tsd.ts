@@ -15,10 +15,10 @@ class Tsd {
     public static install(out: IOut, path: string, query: string) {
         var cmd = child_process.spawn('tsd', ['query', query, '--action', 'install', '--save', '--resolve'], {cwd: path});
 
-        cmd.stdout.on('data', (data: string) => {
-            console.log('stdout: ' + data);
-            if (data.match(/\- [^\n]+\/[^\n]+\.d\.ts/ig)) {
-                console.log(data);
+        cmd.stdout.on('data', (data) => {
+            // console.log('stdout: ' + data);
+            if (data.toString().match(/\- [^\n]+\/[^\n]+\.d\.ts/ig)) {
+                console.log(data.toString());
             }
         });
 
@@ -93,7 +93,7 @@ class AtomTsd implements IOut {
                 buttons: ["Yes", "Cancel"]
             });
 
-            if (answer === 1) {
+            if (answer === 0) {
                 Tsd.install(this, this.workingDirectory(), def);
             }
         });
