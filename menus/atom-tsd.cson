@@ -2,8 +2,8 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Install with tsd'
-      'command': 'atom-tsd:install'
+      'label': 'TSD Install'
+      'command': 'tsd:install'
     }
   ]
 'menu': [
@@ -14,7 +14,7 @@
       'submenu': [
         {
           'label': 'Install'
-          'command': 'atom-tsd:install'
+          'command': 'tsd:install'
         }
       ]
     ]
