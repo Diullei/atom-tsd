@@ -26,7 +26,7 @@ class CommandOutputView extends spacePen.View {
                         }, function() {
                             _this.span({
                                 "class": 'heading-fold icon-remove-close',
-                                'style': "cursor: pointer, display: none",
+                                'style': "cursor: pointer; display: none",
                                 'click': "close",
                                 outlet: 'div'
                             });

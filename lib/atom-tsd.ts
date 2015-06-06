@@ -93,7 +93,7 @@ class AtomTsd {
         this.atomTsdView = new AtomTsdView(this._items, (def: any) => {
             console.log(def);
             var answer = atom.confirm({
-                message: 'You really want to install the "' + def + '" file with all of its dependencies?',
+                message: 'You really want to install the "' + def + '" typing with all of its dependencies?',
                 buttons: ["Yes", "Cancel"]
             });
 
