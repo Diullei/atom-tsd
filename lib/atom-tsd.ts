@@ -10,7 +10,18 @@ import {CompositeDisposable} from 'atom';
 
 class Tsd {
     public static install(out: (line: string) => void, path: string, query: string) {
+        var tsdMissing = false;
+
         var cmd = child_process.spawn('tsd', ['query', query, '--action', 'install', '--save', '--resolve'], {cwd: path});
+
+        cmd.on('error', function(err) {
+            if (err.code === 'ENOENT' && err.syscall === 'spawn tsdx' && err.path === 'tsd') {
+                tsdMissing = true;
+                out('--missing-tsd--');
+            } else {
+                throw err;
+            }
+        });
 
         cmd.stdout.on('data', (data) => {
             // console.log('tsd stdout: ' + data);
@@ -30,7 +41,9 @@ class Tsd {
 
         cmd.on('close', function (code) {
             console.log('tsd child process exited with code ' + code);
-            out('--finish--');
+            if (!tsdMissing) {
+                out('--finish--');
+            }
         });
     }
 }
@@ -57,6 +70,8 @@ class AtomTsd {
     public activate(state: any) {
         this.subscriptions = new CompositeDisposable();
         return this.subscriptions.add(atom.commands.add('atom-workspace', 'tsd:install', () => this.install()));
+        return this.subscriptions.add(atom.commands.add('atom-workspace', 'tsd:reinstall', () => this.reinstall()));
+        return this.subscriptions.add(atom.commands.add('atom-workspace', 'tsd:update', () => this.update()));
     }
 
     public deactivate() {
@@ -89,9 +104,14 @@ class AtomTsd {
         }
     }
 
+    public reinstall() {
+    }
+
+    public update() {
+    }
+
     public install() {
         this.atomTsdView = new AtomTsdView(this._items, (def: any) => {
-            console.log(def);
             var answer = atom.confirm({
                 message: 'You really want to install the "' + def + '" typing with all of its dependencies?',
                 buttons: ["Yes", "Cancel"]
@@ -129,7 +149,16 @@ class AtomTsd {
 
                 Tsd.install((line) => {
                     if (line != '--finish--') {
-                        this.outView.addOutput(line);
+                        if (line === '--missing-tsd--') {
+                            window.clearInterval(id);
+                            this.outView.close();
+                            var answer = atom.confirm({
+                                message: 'It seems that you do not have installed TSD :(\n\nPlease install with:\n\n    npm install -g tsd',
+                                buttons: ['Ok']
+                            });
+                        } else {
+                            this.outView.addOutput(line);
+                        }
                     } else {
                         window.clearInterval(id);
                         this.outView.setStatus('All types have been installed!');
