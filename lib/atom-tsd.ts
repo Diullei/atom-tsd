@@ -13,7 +13,7 @@ class Tsd {
         var cmd = child_process.spawn('tsd', ['query', query, '--action', 'install', '--save', '--resolve'], {cwd: path});
 
         cmd.stdout.on('data', (data) => {
-            console.log('tsd stdout: ' + data);
+            // console.log('tsd stdout: ' + data);
             if (data.toString().match(/\- [^\n]+\/[^\n]+\.d\.ts/ig)) {
                 var regex = /\- ([^\n]+\/[^\n]+\.d\.ts)/igm;
                 var match = regex.exec(data);
