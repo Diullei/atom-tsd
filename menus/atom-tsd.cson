@@ -4,6 +4,14 @@
     {
       'label': 'TSD Install'
       'command': 'tsd:install'
+    },
+    {
+      'label': 'TSD Update'
+      'command': 'tsd:update'
+    },
+    {
+      'label': 'TSD Reinstall'
+      'command': 'tsd:reinstall'
     }
   ]
 'menu': [
@@ -15,6 +23,14 @@
         {
           'label': 'Install'
           'command': 'tsd:install'
+        },
+        {
+          'label': 'Update'
+          'command': 'tsd:update'
+        },
+        {
+          'label': 'Reinstall'
+          'command': 'tsd:reinstall'
         }
       ]
     ]

@@ -8,6 +8,6 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
 'atom-workspace':
-  'ctrl-shift-i': 'tsd:install'
-  'ctrl-shift-u': 'tsd:update'
-  'ctrl-shift-n': 'tsd:reinstall'
+  'ctrl-alt-i': 'tsd:install'
+  'ctrl-alt-u': 'tsd:update'
+  'ctrl-alt-n': 'tsd:reinstall'
