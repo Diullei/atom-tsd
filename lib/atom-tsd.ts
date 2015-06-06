@@ -30,6 +30,7 @@ class Tsd {
 
         cmd.on('close', function (code) {
             console.log('tsd child process exited with code ' + code);
+            out('--finish--');
         });
     }
 }
@@ -106,9 +107,32 @@ class AtomTsd {
                 this.outView.clean();
                 this.outView.show();
 
-                this.outView.setStatus('tsd:install...');
+                var cycle = [
+                    'tsd:install.',
+                    'tsd:install..',
+                    'tsd:install...'
+                ];
 
-                Tsd.install((line) => { this.outView.addOutput(line); }, this.workingDirectory(), def);
+                var cycleIndex = 0;
+
+                var fnWaiting = () => {
+                    if (cycleIndex > 3) {
+                        cycleIndex = 0;
+                    }
+
+                    this.outView.setStatus(cycle[cycleIndex]);
+                };
+
+                var id = window.setInterval(fnWaiting, 500);
+
+                Tsd.install((line) => {
+                    if (line != '--finish--') {
+                        this.outView.addOutput(line);
+                    } else {
+                        window.clearInterval(id);
+                        this.outView.setStatus('tsd:finish');
+                    }
+                }, this.workingDirectory(), def);
             }
         });
 
