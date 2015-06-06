@@ -7,24 +7,24 @@ class CommandOutputView extends spacePen.View {
     private panel: any;
 
     public static content() {
-        return (<any>this).div({
+        return this.div({
                 "class": 'command-runner'
-            }, (function(_this) {
-                return function() {
-                    _this.header({
+            }, () => {
+                return () => {
+                    this.header({
                         "class": 'panel-heading'
-                    }, function() {
-                        _this.span('TSD: ');
-                        _this.span({
+                    }, () => {
+                        this.span('TSD: ');
+                        this.span({
                             "class": 'status-name',
                             outlet: 'header'
                         });
-                        _this.div({
+                        this.div({
                             "class": 'pull-right',
                             'style': "width22px; display:inline-block",
                             outlet: 'header'
-                        }, function() {
-                            _this.span({
+                        }, () => {
+                            this.span({
                                 "class": 'heading-fold icon-remove-close',
                                 'style': "cursor: pointer; display: none",
                                 'click': "close",
@@ -32,17 +32,17 @@ class CommandOutputView extends spacePen.View {
                             });
                         });
                     });
-                    _this.div({
+                    this.div({
                         "class": 'panel-body',
                         outlet: 'outputContainer'
                     }, function() {
-                        _this.pre({
+                        this.pre({
                             "class": 'command-output',
                             outlet: 'output'
                         });
                     });
                 };
-            })(this));
+            });
     }
 
     public initialize() {
