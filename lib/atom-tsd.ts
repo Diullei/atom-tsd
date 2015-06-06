@@ -131,6 +131,10 @@ class AtomTsd {
         });
 
         if (answer === 0) {
+            if (this.outView) {
+                this.outView.detach();
+            }
+
             this.outView = new CommandOutputView();
             this.outView.clean();
             this.outView.show();
@@ -180,6 +184,10 @@ class AtomTsd {
         });
 
         if (answer === 0) {
+            if (this.outView) {
+                this.outView.detach();
+            }
+
             this.outView = new CommandOutputView();
             this.outView.clean();
             this.outView.show();
@@ -232,7 +240,6 @@ class AtomTsd {
             if (answer === 0) {
                 if (this.outView) {
                     this.outView.detach();
-                    // this.outView.destroy();
                 }
 
                 this.outView = new CommandOutputView();
