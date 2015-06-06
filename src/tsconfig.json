@@ -18,6 +18,7 @@
         "./atom-tsd-view.ts",
         "./atom-tsd.ts",
         "./out-view.ts",
+        "./tsd.ts",
         "./util.ts"
     ]
 }

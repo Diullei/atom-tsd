@@ -21,12 +21,8 @@ class AtomTsdView extends spacePen.SelectListView {
     }
 
     public static content() {
-        return this.div({}, () => {
-            this.p({
-                outlet: 'message'
-            }, '');
-
-            // TS 1.4 issue
+        return util.toHtmlEl('<div><p></p></div>', this, () => {
+            /*TS issue*/
             (<any>spacePen.SelectListView).content.call(this);
         });
     }
@@ -86,16 +82,13 @@ class AtomTsdView extends spacePen.SelectListView {
     }
 
     public viewForItem(item: { displayName: string; name: string; }) {
-        var keyBindings = this.keyBindings;
         return spacePen.$$(function() {
-            return this.li({
-                'class': 'event',
-                'data-event-name': item.name
-            }, () => {
-                    return this.span(item.displayName, {
-                        title: item.name
-                    });
-                });
+            return util.toHtmlEl(`
+                <li class="event" data-event-name="${item.name}">
+                    <span title="${item.name}">
+                        ${item.displayName}
+                    </span>
+                </li>`, this);
         });
     }
 

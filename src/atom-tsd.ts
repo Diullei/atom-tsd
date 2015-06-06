@@ -2,93 +2,16 @@
 
 import fs = require('fs');
 import path = require('path');
-import AtomTsdView = require('./atom-tsd-view');
-import CommandOutputView = require('./out-view');
-import child_process = require('child_process');
 
 import {CompositeDisposable} from 'atom';
 
-function cycleMessage(msg: string, fnPublish: (msg: string) => void) {
-    var cycle = [
-        `${msg}.`,
-        `${msg}..`,
-        `${msg}...`,
-        `${msg}....`,
-        `${msg}.....`
-    ];
-
-    var cycleIndex = 0;
-
-    var fnWaiting = () => {
-        if (cycleIndex > 4) {
-            cycleIndex = 0;
-        }
-        fnPublish(cycle[cycleIndex++]);
-    };
-
-    var id = window.setInterval(fnWaiting, 500);
-
-    return {
-        cancel: () => {
-            window.clearInterval(id);
-        }
-    };
-}
-
-class Tsd {
-    public static install(out: (line: string) => void, path: string, query: string) {
-        this.execTsdCommand(out, path, ['query', query, '--action', 'install', '--save', '--resolve']);
-    }
-
-    public static reinstall(out: (line: string) => void, path: string) {
-        this.execTsdCommand(out, path, ['reinstall', '--save', '--overwrite']);
-    }
-
-    public static update(out: (line: string) => void, path: string) {
-        this.execTsdCommand(out, path, ['update', '--save', '--overwrite']);
-    }
-
-    public static execTsdCommand(out: (line: string) => void, path: string, args: string[]) {
-        var tsdMissing = false;
-        var isWin = /^win/.test(process.platform);
-
-        var cmd = child_process.spawn((isWin ? 'tsd.cmd' : 'tsd'), args, {cwd: path});
-
-        cmd.on('error', function(err) {
-            if (err.code === 'ENOENT' && err.syscall === 'spawn tsd' && err.path === 'tsd') {
-                tsdMissing = true;
-                out('--missing-tsd--');
-            } else {
-                throw err;
-            }
-        });
-
-        cmd.stdout.on('data', (data) => {
-            // console.log('tsd stdout: ' + data);
-            if (data.toString().match(/\- [^\n]+\/[^\n]+\.d\.ts/ig)) {
-                var regex = /\- ([^\n]+\/[^\n]+\.d\.ts)/igm;
-                var match = regex.exec(data);
-                while(match != null) {
-                    out(match[1]);
-                    match = regex.exec(data);
-                }
-            }
-        });
-
-        cmd.stderr.on('data ', function (data) {
-            console.log('tsd stderr: ' + data);
-        });
-
-        cmd.on('close', function (code) {
-            console.log('tsd child process exited with code ' + code);
-            if (!tsdMissing) {
-                out('--finish--');
-            }
-        });
-    }
-}
+import AtomTsdView = require('./atom-tsd-view');
+import CommandOutputView = require('./out-view');
+import util = require('./util');
+import Tsd = require('./tsd');
 
 class AtomTsd {
+
     atomTsdView: any;
     outView: any;
     modalPanel: any;
@@ -96,6 +19,10 @@ class AtomTsd {
     private _items: { displayName: string; name: string; }[] = [];
 
     constructor() {
+        this.loadCatalog();
+    }
+
+    private loadCatalog() {
         var defs = require('./repository.json');
 
         defs.content.forEach((def) => {
@@ -144,7 +71,7 @@ class AtomTsd {
         }
     }
 
-    public tsdIdMissing() {
+    public tsdIsMissing() {
         var answer = atom.confirm({
             message: 'TSD: It seems that you do not have installed TSD :(\n\nPlease install with:\n\n    npm install -g tsd',
             buttons: ['Ok']
@@ -166,7 +93,7 @@ class AtomTsd {
             this.outView.clean();
             this.outView.show();
 
-            var waitMessage = cycleMessage('reinstalling', (msg: string) => {
+            var waitMessage = util.cycleMessage('reinstalling', (msg: string) => {
                 this.outView.setStatus(msg);
             });
 
@@ -176,7 +103,7 @@ class AtomTsd {
                     if (line === '--missing-tsd--') {
                         waitMessage.cancel();
                         this.outView.close();
-                        this.tsdIdMissing();
+                        this.tsdIsMissing();
                     } else {
                         this.outView.addOutput(line);
                     }
@@ -204,7 +131,7 @@ class AtomTsd {
             this.outView.clean();
             this.outView.show();
 
-            var waitMessage = cycleMessage('updating', (msg: string) => {
+            var waitMessage = util.cycleMessage('updating', (msg: string) => {
                 this.outView.setStatus(msg);
             });
 
@@ -213,7 +140,7 @@ class AtomTsd {
                     if (line === '--missing-tsd--') {
                         waitMessage.cancel();
                         this.outView.close();
-                        this.tsdIdMissing();
+                        this.tsdIsMissing();
                     } else {
                         this.outView.addOutput(line);
                     }
@@ -242,7 +169,7 @@ class AtomTsd {
                 this.outView.clean();
                 this.outView.show();
 
-                var waitMessage = cycleMessage('installing', (msg: string) => {
+                var waitMessage = util.cycleMessage('installing', (msg: string) => {
                     this.outView.setStatus(msg);
                 });
 
@@ -251,7 +178,7 @@ class AtomTsd {
                         if (line === '--missing-tsd--') {
                             waitMessage.cancel();
                             this.outView.close();
-                            this.tsdIdMissing();
+                            this.tsdIsMissing();
                         } else {
                             this.outView.addOutput(line);
                         }
