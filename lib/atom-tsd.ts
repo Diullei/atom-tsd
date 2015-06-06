@@ -105,12 +105,18 @@ class AtomTsd {
     }
 
     public reinstall() {
+        this.execTsdCommand('reinstall', 'All types have been reinstalled!');
     }
 
     public update() {
+        this.execTsdCommand('update', 'All types have been updated!');
     }
 
     public install() {
+        this.execTsdCommand('install', 'All types have been installed!');
+    }
+
+    public execTsdCommand(command: string, message: string) {
         this.atomTsdView = new AtomTsdView(this._items, (def: any) => {
             var answer = atom.confirm({
                 message: 'You really want to install the "' + def + '" typing with all of its dependencies?',
@@ -147,7 +153,7 @@ class AtomTsd {
 
                 var id = window.setInterval(fnWaiting, 500);
 
-                Tsd.install((line) => {
+                Tsd['command']((line) => {
                     if (line != '--finish--') {
                         if (line === '--missing-tsd--') {
                             window.clearInterval(id);
@@ -161,7 +167,7 @@ class AtomTsd {
                         }
                     } else {
                         window.clearInterval(id);
-                        this.outView.setStatus('All types have been installed!');
+                        this.outView.setStatus(message);
                         this.outView.showCloseButton();
                     }
                 }, this.workingDirectory(), def);
