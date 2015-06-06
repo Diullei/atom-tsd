@@ -116,9 +116,16 @@ class AtomTsd {
         }
     }
 
+    public tsdIdMissing() {
+        var answer = atom.confirm({
+            message: 'TSD: It seems that you do not have installed TSD :(\n\nPlease install with:\n\n    npm install -g tsd',
+            buttons: ['Ok']
+        });
+    }
+
     public reinstall() {
         var answer = atom.confirm({
-            message: 'You really want to reinstall the typings?',
+            message: 'TSD: You really want to reinstall the typings?',
             buttons: ["Yes", "Cancel"]
         });
 
@@ -152,10 +159,7 @@ class AtomTsd {
                     if (line === '--missing-tsd--') {
                         window.clearInterval(id);
                         this.outView.close();
-                        var answer = atom.confirm({
-                            message: 'It seems that you do not have installed TSD :(\n\nPlease install with:\n\n    npm install -g tsd',
-                            buttons: ['Ok']
-                        });
+                        this.tsdIdMissing();
                     } else {
                         this.outView.addOutput(line);
                     }
@@ -170,7 +174,7 @@ class AtomTsd {
 
     public update() {
         var answer = atom.confirm({
-            message: 'You really want to update the typings?',
+            message: 'TSD: You really want to update the typings?',
             buttons: ["Yes", "Cancel"]
         });
 
@@ -204,10 +208,7 @@ class AtomTsd {
                     if (line === '--missing-tsd--') {
                         window.clearInterval(id);
                         this.outView.close();
-                        var answer = atom.confirm({
-                            message: 'It seems that you do not have installed TSD :(\n\nPlease install with:\n\n    npm install -g tsd',
-                            buttons: ['Ok']
-                        });
+                        this.tsdIdMissing();
                     } else {
                         this.outView.addOutput(line);
                     }
@@ -223,7 +224,7 @@ class AtomTsd {
     public install() {
         this.atomTsdView = new AtomTsdView(this._items, (def: any) => {
             var answer = atom.confirm({
-                message: 'You really want to install the "' + def + '" typing with all of its dependencies?',
+                message: 'TSD: You really want to install the "' + def + '" typing with all of its dependencies?',
                 buttons: ["Yes", "Cancel"]
             });
 
@@ -262,10 +263,7 @@ class AtomTsd {
                         if (line === '--missing-tsd--') {
                             window.clearInterval(id);
                             this.outView.close();
-                            var answer = atom.confirm({
-                                message: 'It seems that you do not have installed TSD :(\n\nPlease install with:\n\n    npm install -g tsd',
-                                buttons: ['Ok']
-                            });
+                            this.tsdIdMissing();
                         } else {
                             this.outView.addOutput(line);
                         }
