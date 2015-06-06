@@ -4,7 +4,7 @@
 
 Install and update DefinitelyTyped typescript typings using [TSD](https://github.com/DefinitelyTyped/tsd) with [Atom](https://atom.io).
 
-![Atom TSD](https://github.com/Diullei/atom-tsd/raw/master/optimised.gif)
+![](https://raw.githubusercontent.com/diullei/atom-tsd/master/optimised.gif)
 
 ## Available commands
 
