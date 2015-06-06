@@ -10,9 +10,21 @@ import {CompositeDisposable} from 'atom';
 
 class Tsd {
     public static install(out: (line: string) => void, path: string, query: string) {
+        this.execTsdCommand(out, path, ['query', query, '--action', 'install', '--save', '--resolve']);
+    }
+
+    public static reinstall(out: (line: string) => void, path: string) {
+        this.execTsdCommand(out, path, ['reinstall', '--save', '--overwrite']);
+    }
+
+    public static update(out: (line: string) => void, path: string) {
+        this.execTsdCommand(out, path, ['update', '--save', '--overwrite']);
+    }
+
+    public static execTsdCommand(out: (line: string) => void, path: string, args: string[]) {
         var tsdMissing = false;
 
-        var cmd = child_process.spawn('tsd', ['query', query, '--action', 'install', '--save', '--resolve'], {cwd: path});
+        var cmd = child_process.spawn('tsd', args, {cwd: path});
 
         cmd.on('error', function(err) {
             if (err.code === 'ENOENT' && err.syscall === 'spawn tsdx' && err.path === 'tsd') {
@@ -105,18 +117,102 @@ class AtomTsd {
     }
 
     public reinstall() {
-        this.execTsdCommand('reinstall', 'All types have been reinstalled!');
+        var answer = atom.confirm({
+            message: 'You really want to reinstall the typings?',
+            buttons: ["Yes", "Cancel"]
+        });
+
+        if (answer === 0) {
+            var cycle = [
+                'install.',
+                'install..',
+                'install...',
+                'install....',
+                'install.....'
+            ];
+
+            var cycleIndex = 0;
+
+            var fnWaiting = () => {
+                if (cycleIndex > 4) {
+                    cycleIndex = 0;
+                }
+
+                this.outView.setStatus(cycle[cycleIndex++]);
+            };
+
+            var id = window.setInterval(fnWaiting, 500);
+
+            Tsd.update((line) => {
+                if (line != '--finish--') {
+                    if (line === '--missing-tsd--') {
+                        window.clearInterval(id);
+                        this.outView.close();
+                        var answer = atom.confirm({
+                            message: 'It seems that you do not have installed TSD :(\n\nPlease install with:\n\n    npm install -g tsd',
+                            buttons: ['Ok']
+                        });
+                    } else {
+                        this.outView.addOutput(line);
+                    }
+                } else {
+                    window.clearInterval(id);
+                    this.outView.setStatus('All types have been reinstalled!');
+                    this.outView.showCloseButton();
+                }
+            }, this.workingDirectory());
+        }
     }
 
     public update() {
-        this.execTsdCommand('update', 'All types have been updated!');
+        var answer = atom.confirm({
+            message: 'You really want to update the typings?',
+            buttons: ["Yes", "Cancel"]
+        });
+
+        if (answer === 0) {
+            var cycle = [
+                'install.',
+                'install..',
+                'install...',
+                'install....',
+                'install.....'
+            ];
+
+            var cycleIndex = 0;
+
+            var fnWaiting = () => {
+                if (cycleIndex > 4) {
+                    cycleIndex = 0;
+                }
+
+                this.outView.setStatus(cycle[cycleIndex++]);
+            };
+
+            var id = window.setInterval(fnWaiting, 500);
+
+            Tsd.update((line) => {
+                if (line != '--finish--') {
+                    if (line === '--missing-tsd--') {
+                        window.clearInterval(id);
+                        this.outView.close();
+                        var answer = atom.confirm({
+                            message: 'It seems that you do not have installed TSD :(\n\nPlease install with:\n\n    npm install -g tsd',
+                            buttons: ['Ok']
+                        });
+                    } else {
+                        this.outView.addOutput(line);
+                    }
+                } else {
+                    window.clearInterval(id);
+                    this.outView.setStatus('All types have been updated!');
+                    this.outView.showCloseButton();
+                }
+            }, this.workingDirectory());
+        }
     }
 
     public install() {
-        this.execTsdCommand('install', 'All types have been installed!');
-    }
-
-    public execTsdCommand(command: string, message: string) {
         this.atomTsdView = new AtomTsdView(this._items, (def: any) => {
             var answer = atom.confirm({
                 message: 'You really want to install the "' + def + '" typing with all of its dependencies?',
@@ -153,7 +249,7 @@ class AtomTsd {
 
                 var id = window.setInterval(fnWaiting, 500);
 
-                Tsd[command]((line) => {
+                Tsd.install((line) => {
                     if (line != '--finish--') {
                         if (line === '--missing-tsd--') {
                             window.clearInterval(id);
@@ -167,7 +263,7 @@ class AtomTsd {
                         }
                     } else {
                         window.clearInterval(id);
-                        this.outView.setStatus(message);
+                        this.outView.setStatus('All types have been installed!');
                         this.outView.showCloseButton();
                     }
                 }, this.workingDirectory(), def);
