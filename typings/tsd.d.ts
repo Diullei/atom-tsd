@@ -21,3 +21,5 @@
 /// <reference path="jquery/jquery.d.ts" />
 /// <reference path="semver/semver.d.ts" />
 /// <reference path="q/Q.d.ts" />
+/// <reference path="angular-scenario/angular-scenario.d.ts" />
+/// <reference path="angularjs/legacy/angular-scenario-1.2.d.ts" />
