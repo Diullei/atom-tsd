@@ -2,47 +2,29 @@
 
 import spacePen = require("atom-space-pen-views");
 
+import util = require('./util');
+
 class CommandOutputView extends spacePen.View {
     element: HTMLDivElement;
     private panel: any;
 
     public static content() {
-        return this.div({
-                "class": 'command-runner'
-            }, () => {
-                return () => {
-                    this.header({
-                        "class": 'panel-heading'
-                    }, () => {
-                        this.span('TSD: ');
-                        this.span({
-                            "class": 'status-name',
-                            outlet: 'header'
-                        });
-                        this.div({
-                            "class": 'pull-right',
-                            'style': "width22px; display:inline-block",
-                            outlet: 'header'
-                        }, () => {
-                            this.span({
-                                "class": 'heading-fold icon-remove-close',
-                                'style': "cursor: pointer; display: none",
-                                'click': "close",
-                                outlet: 'div'
-                            });
-                        });
-                    });
-                    this.div({
-                        "class": 'panel-body',
-                        outlet: 'outputContainer'
-                    }, function() {
-                        this.pre({
-                            "class": 'command-output',
-                            outlet: 'output'
-                        });
-                    });
-                };
-            });
+        return util.toHtmlEl(`
+            <div class="command-runner">
+                <header class="panel-heading">
+                    <span>TSD: </span>
+                    <span class="status-name"></span>
+                    <div class="pull-right"
+                         style="width: 22px; display:inline-block">
+                        <span class="heading-fold icon-remove-close"
+                              style="cursor: pointer; display: none"
+                              click="close"></span>
+                    </div>
+                </header>
+                <div class="panel-body">
+                    <pre class="command-output"></pre>
+                </div>
+            </div>`, this);
     }
 
     public initialize() {

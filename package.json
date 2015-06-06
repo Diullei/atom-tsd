@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "atom-space-pen-views": "^2.0.5",
+    "htmlparser2": "^3.8.3",
     "lodash": "^3.9.3",
     "loophole": "^1.0.0",
     "tsd": "^0.6.1",

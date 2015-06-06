@@ -17,6 +17,7 @@
     "files": [
         "./atom-tsd-view.ts",
         "./atom-tsd.ts",
-        "./out-view.ts"
+        "./out-view.ts",
+        "./util.ts"
     ]
 }

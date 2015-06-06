@@ -4,6 +4,8 @@
 
 import spacePen = require("atom-space-pen-views");
 
+import util = require('./util');
+
 var _ = require('lodash');
 
 class AtomTsdView extends spacePen.SelectListView {
