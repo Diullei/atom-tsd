@@ -101,6 +101,8 @@ class AtomTsd {
                 this.outView.clean();
                 this.outView.show();
 
+                this.outView.setStatus('tsd:install...');
+
                 Tsd.install((line) => { this.outView.addOutput(line); }, this.workingDirectory(), def);
             }
         });

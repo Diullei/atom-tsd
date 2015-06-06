@@ -45,9 +45,14 @@ class CommandOutputView extends spacePen.View {
             })(this));
     }
 
+    public initialize() {
+        this.panel = atom.workspace.addBottomPanel({
+            item: this
+        });
+    }
+
     show() {
         this.panel.show();
-        return (<any>this).scrollToBottomOfOutput();
     }
 
     public close() {
@@ -62,6 +67,11 @@ class CommandOutputView extends spacePen.View {
     clean() {
         var el = <HTMLElement>this.element.querySelector('.command-output');
         el.innerHTML = '';
+    }
+
+    public setStatus(status: string) {
+        var el = <HTMLElement>this.element.querySelector('.status-name');
+        el.textContent = status;
     }
 
     addOutput(data) {
