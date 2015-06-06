@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         ts: {
             build: {
-                src: ['lib/**/*.ts', 'spec/**/*.ts'],
+                src: ['src/**/*.ts', 'spec/**/*.ts'],
                 options: {
                     target: 'es3',
                     module: 'commonjs',
@@ -24,7 +24,7 @@ module.exports = function(grunt) {
                 configuration: grunt.file.readJSON('tslintrc.json')
             },
             all: {
-                src: ['lib/**/*.ts', 'spec/**/*.ts']
+                src: ['src/**/*.ts', 'spec/**/*.ts']
             }
         },
         jasmine_node: {
@@ -36,8 +36,18 @@ module.exports = function(grunt) {
                 specNameMatcher: 'spec'
             },
             all: ['spec/']
+        },
+        clean: {
+            lib: ['lib']
+        },
+        copy: {
+            lib: {
+                files: [
+                    {expand: true, cwd: 'src/', src: ['**/*.js', 'repository.json'], dest: 'lib/'}
+                ]
+            }
         }
     });
 
-    grunt.registerTask('default', ['ts:build']);
+    grunt.registerTask('default', ['ts:build', 'clean:lib', 'copy:lib']);
 };
