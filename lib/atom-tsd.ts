@@ -123,6 +123,10 @@ class AtomTsd {
         });
 
         if (answer === 0) {
+            this.outView = new CommandOutputView();
+            this.outView.clean();
+            this.outView.show();
+
             var cycle = [
                 'install.',
                 'install..',
@@ -171,6 +175,10 @@ class AtomTsd {
         });
 
         if (answer === 0) {
+            this.outView = new CommandOutputView();
+            this.outView.clean();
+            this.outView.show();
+
             var cycle = [
                 'install.',
                 'install..',
