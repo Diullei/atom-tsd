@@ -3,11 +3,6 @@
   "main": "./lib/atom-tsd",
   "version": "0.0.0",
   "description": "A short description of your package",
-  "activationCommands": {
-      "atom-workspace": "tsd:install",
-      "atom-workspace": "tsd:update",
-      "atom-workspace": "tsd:reinstall"
-  },
   "repository": "https://github.com/atom/atom-tsd",
   "license": "MIT",
   "engines": {

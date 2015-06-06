@@ -2,15 +2,15 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'TSD Install'
+      'label': 'TSD Install',
       'command': 'tsd:install'
     },
     {
-      'label': 'TSD Update'
+      'label': 'TSD Update',
       'command': 'tsd:update'
     },
     {
-      'label': 'TSD Reinstall'
+      'label': 'TSD Reinstall',
       'command': 'tsd:reinstall'
     }
   ]
@@ -21,15 +21,15 @@
       'label': 'tsd'
       'submenu': [
         {
-          'label': 'Install'
+          'label': 'Install',
           'command': 'tsd:install'
         },
         {
-          'label': 'Update'
+          'label': 'Update',
           'command': 'tsd:update'
         },
         {
-          'label': 'Reinstall'
+          'label': 'Reinstall',
           'command': 'tsd:reinstall'
         }
       ]
